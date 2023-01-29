@@ -1,0 +1,641 @@
+<%- include("./partials/header"); %>
+
+<script>
+
+    function editQuizItem(e)
+    {
+        let dashItems=document.querySelectorAll(".dash_items");
+        
+        for(let dashItem of dashItems)
+        {
+            if(dashItem.classList.contains("editQuiz"))
+                dashItem.style.display='';
+            else
+                dashItem.style.display='none';
+        }
+
+        let selectBox=document.querySelector(".quizEditSelect");
+
+        for(let opt of selectBox.children)
+        {
+            if(opt.value===e)
+            {
+                opt.selected="true";
+            }
+        }
+
+        addItemForEdit('',selectBox);
+    }
+
+    function deleteQuizItem(id)
+    {
+        fetch(`/quiz/data/${id}`, { method: 'DELETE' })
+
+        .then(() => window.location.reload());
+
+    }
+
+    function detectChange(elem)
+    {
+        let index=1;
+        console.log(elem.value);
+        if(elem.value==='')
+        {
+            elemChild=elem.children;
+            for(let child of elem.parentElement.parentElement.children)
+            {
+                if(child.classList.contains("options_group"))
+                {   
+                    for(let c of child.children)
+                    {
+                        elemChild[index].value=c.value;
+                        index++;
+                    }
+                    index=1;
+                }
+            }
+        }
+    }
+
+    function addNewQuestion(e,elem='')
+    {
+
+        
+        e.preventDefault();
+        let quizQuesContainer='';
+        if(elem==='edit')
+        {
+            quizQuesContainer=document.querySelector(".editQuizForm .quizQNA");
+        }else{
+            quizQuesContainer=document.querySelector(".quizQNA");
+        }
+
+        let content=`<div class="question">
+                        <input required type="text" placeholder="Write your question" class="ques">
+                        <div class="options_group">
+                            <input required type="text" placeholder="option A" class="options">
+                            <input required type="text" placeholder="option B" class="options">
+                            <input required type="text" placeholder="option C" class="options">
+                            <input required type="text" placeholder="option D" class="options">
+                        </div>
+
+                        <div style="display: flex;" class="opt_ans">
+                            <p>Correct answer : </p>
+                            <select name="ans" class="ans" style="margin-left:10px" onchange="detectChange(this)">
+                                <option value="default" selected disabled>Select</option>
+                                <option value="">A</option>
+                                <option value="">B</option>
+                                <option value="">C</option>
+                                <option value="">D</option>
+                            </select>
+                            <span title="delete" onclick="deleteQues(event,this,'${elem==='edit'?'editSection':'addSection'}')" class="delQues"><i class="fa-solid fa-trash"></i></span>
+                        </div>
+                    </div>`;
+
+        quizQuesContainer.insertAdjacentHTML("beforeend",content);
+
+        if(elem!=='edit')
+        {
+            document.querySelector(".total").value=quizQuesContainer.children.length;
+        }else{
+            document.querySelector(".editQuizForm .total").value=quizQuesContainer.children.length;
+        }       
+         
+    }
+
+
+    function deleteQues(e,curr,elem='')
+    {
+        e.preventDefault();
+        let quizQuesContainer='';
+        
+        if(elem!=='editSection')
+        {
+            quizQuesContainer=document.querySelector(".quizQNA");
+        }
+        else{
+            quizQuesContainer=document.querySelector(".editQuizForm .quizQNA");
+
+        }
+        curr.parentElement.parentElement.remove();
+
+        if(elem!=='editSection')
+        {
+            document.querySelector(".total").value=quizQuesContainer.children.length;
+        }
+        else{
+            document.querySelector(".editQuizForm .total").value=quizQuesContainer.children.length;
+        }
+
+    }
+
+</script>
+
+<div class="dashboard">
+
+    <div class="dashboard_feature">
+        <a href="/quizzes"><img src="/images/quizpool.png" alt=""></a>        
+
+        <div class="content">
+
+            <p class="dash dash_links" id="dashHome">Dashboard</p>
+            <div class="features">
+                <p class="opt" style="pointer-events: none;">features</p>
+                <p class="dash_links" id="addQuiz">Add</p>
+                <p class="dash_links" id="editQuiz">Edit</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="mobile_content_feature">
+
+        <i class="fa-sharp fa-solid fa-house dash dash_links" id="dashHome"></i>
+        <i class="fa-solid fa-plus dash_links" id="addQuiz"></i>
+        <i class="fa-solid fa-pen dash_links" id="editQuiz"></i>
+
+    </div>
+
+
+    <div class="dashboard_view">
+
+        <div class="profile">
+            <p><%=user[0].name%></p>
+            <button style="border:none"><a href="/quizzes/admin/logout">Logout</a></button>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashHome dash_items">
+
+            <div class="stats">
+                <div class="total_quiz">
+                    <h2>Quizzes</h2>
+                    <p><%=quizData.length%></p>
+                </div>
+
+                <div class="latest_quiz">
+                    <h2>Latest Quiz</h2>
+                    <p>
+                       <% if(quizData.length){ %>
+                            <%=quizData[quizData.length-1].quizName%>
+                       <% } %>
+                    </p>
+                </div>
+            </div>
+        
+            <input required type="search" placeholder="Search by quiz" class="searchQuery">
+            <div class="responsive_table">
+
+
+                <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Total questions</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <%  for(let i=0;i<quizData.length;i++) { %>
+
+                        <tr class="<%=quizData[i].quizName%>">
+                            <input style="position:absolute; visibility:hidden;" type="text" value="<%=quizData[i]._id%>">                        
+                            <td> <%=i+1%> </td>
+                            <td><%=quizData[i].quizName%></td>
+                            <td><%=quizData[i].quizDesc%></td>
+                            <td><%=quizData[i].total%></td>
+                            <td class="edit" quizNameData="<%=quizData[i].quizName%>"   onclick="editQuizItem('<%=quizData[i].quizName%>')" style="width:max-content;"><i style="padding:10px; width:100%;height: 100%;" class="fa-solid fa-pen"></i></td>
+                            <td class="delete" quizNameData="<%=quizData[i].quizName%>" onclick="deleteQuizItem('<%=quizData[i]._id%>')"><i style="padding:10px; width:100%;height: 100%;" class="fa-solid fa-trash"></i></td>
+                            <td ><a style="color:black;" href="/quizzes/<%=quizData[i].quizName%>"><i style="padding:10px; width:100%;height: 100%;"  class="fa-solid fa-eye"></i></a></td>
+                        </tr>
+
+                    <% } %>
+                </tbody>
+
+            </table>
+        </div>
+        </div>
+
+
+        <div class="addQuiz dash_items" style="position: relative;">
+            <h3 style="position: absolute; top:10px;right:50px;color:gray;font-weight: 400;">Add New Quiz</h3>
+            <form class="addQuizForm" onsubmit="addQuizFormSubmit(this,event)">
+                <input required type="text" placeholder="Quiz Name" class="quizName">
+                
+                <input required type="text" placeholder="description" class="quizDesc">
+                
+                <div class="quizQNA">
+
+                    <div class="question">
+                        <input required type="text" placeholder="Write your question" class="ques">
+                        <div class="options_group">
+                            <input required type="text" placeholder="option A" class="options">
+                            <input required type="text" placeholder="option B" class="options">
+                            <input required type="text" placeholder="option C" class="options">
+                            <input required type="text" placeholder="option D" class="options">
+                        </div>
+
+                        <div style="display: flex;" class="opt_ans">
+                            <p>Correct answer : </p>
+                            <select name="ans" class="ans" style="margin-left:10px" onchange="detectChange(this)">
+                                <option value="default" selected disabled>Select</option>
+                                <option value="">A</option>
+                                <option value="">B</option>
+                                <option value="">C</option>
+                                <option value="">D</option>
+                            </select>
+
+                            <span title="delete" onclick="deleteQues(event,this,'addSection')" class="delQues"><i class="fa-solid fa-trash"></i></span>
+
+                        </div>
+
+                    </div>
+
+                    
+                </div>
+
+                <button class="add_button" onclick="addNewQuestion(event)">+ Add questions</button>
+
+                <input required type="text" name="total" placeholder="total" class="total" value="1">
+
+                <button class="addAllQues">Add </button>  
+            </form>
+        </div>
+
+        <div class="editQuiz dash_items" style="position: relative;">
+
+            <% if(quizData){ %>
+                <select class="quizEditSelect">
+                    <option value="default" selected disable >Select Quiz</option>
+                <% for(let i=0;i<quizData.length;i++){ %>
+                    <option value="<%=quizData[i].quizName%>" class="<%=quizData[i]._id%>"><%=quizData[i].quizName%></option>
+                        <% } %>
+                </select>
+            <% } %>
+
+            <h3 style="position: absolute; top:-45px;right:50px;color:gray;font-weight: 400;">Edit Quiz</h3>
+            <form class="editQuizForm" onsubmit="editQuizForm(event)">
+                <input required type="text" placeholder="Quiz Name" class="quizName">
+                
+                <input required type="text" placeholder="description" class="quizDesc">
+                
+                <div class="quizQNA">
+
+                    
+                    
+                </div>
+
+                <button class="add_button" id="edit" onclick="addNewQuestion(event,'edit')">+ Add questions</button>
+
+                <input required type="text" name="total" placeholder="total" class="total" value="0">
+
+                <button class="addAllQues" type="submit">Save</button>  
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+
+    let dashHome=document.querySelector(".dashHome");
+    let addQuiz=document.querySelector(".addQuiz");
+    let editQuiz=document.querySelector(".editQuiz");
+    let removeQuiz=document.querySelector(".removeQuiz");
+    let dashLinks=document.querySelectorAll(".dash_links");
+    let dashItems=document.querySelectorAll(".dash_items");
+    let trs=document.querySelectorAll("tbody tr");
+    let query=document.querySelector(".searchQuery");
+    
+    for(let dashItem of dashItems)
+    {
+        if(dashItem.classList.contains("dashHome"))
+            dashItem.style.display='';
+        else
+            dashItem.style.display='none';
+    }
+
+
+    for(let dashLink of dashLinks)
+    {
+        dashLink.addEventListener("click",function(e)
+        {
+            showDashItem(e);
+        })
+    }
+
+    function showDashItem(e)
+    {
+        for(let dashLink of dashLinks)
+        {
+            dashLink.style.background="#010032";
+        }
+
+        for(let dashItem of dashItems)
+        {
+            e.target.style.background="#010021"
+            if(dashItem.classList.contains(e.target.id))
+                dashItem.style.display="block"
+             else
+                dashItem.style.display="none";
+        }
+
+    }
+
+    query.addEventListener("keyup",(e)=>
+    {
+
+        for(let tr of trs)
+        {
+            if(tr.classList[0].toLowerCase().includes(e.target.value.toLowerCase()))
+            {
+                tr.style.display=''
+            }
+            else
+            {
+                tr.style.display='none'
+            }
+        }
+    })
+
+    let addQuizForm=document.querySelector(".addQuizForm");
+    
+    function addQuizFormSubmit(elem,e)
+    {
+        e.preventDefault();
+
+        if(elem===e.target){
+
+        let questions=document.querySelectorAll(".question");
+        let quesAns=[];
+        let oneQues=
+        {
+            ques:'',
+            options:[],
+            ans:''
+        }
+
+        for(let ques of questions)
+        {
+
+            for(let child of ques.children)
+            {
+                if(child.classList.contains("ques"))
+                    oneQues.ques=child.value;
+                else if(child.classList.contains("options_group"))
+                {
+                    for(let c of child.children)
+                    {
+                        oneQues.options.push(c.value);
+                    }
+                }
+                else if(child.classList.contains("opt_ans"))
+                {
+                    if(child.children[1])
+                    {
+                        oneQues.ans=child.children[1].value;
+                    }
+                }
+            }
+
+            quesAns.push({...oneQues});
+            oneQues.ques='';
+            oneQues.ans='';
+            oneQues.options=[];
+        }
+    
+        let quizAddData={
+            quizName:document.querySelector(".quizName").value,
+            quizDesc:document.querySelector(".quizDesc").value,
+            quizQNA:[...quesAns],
+            total:0
+        }
+
+        quizAddData.total=quizAddData.quizQNA.length;
+
+        const fetchOptions = {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quizAddData),
+        };
+
+        fetch("/quiz/data",fetchOptions).then((data)=>
+        {
+            if(!data.ok)
+                throw Error(data.status);
+                return data.json();
+        }).then(quizAddData=>
+        {
+            console.log(quizAddData);
+        }).catch(err=>console.log(err));
+        
+        window.location.reload();
+    }
+    }
+    
+    let editSelectBox=document.querySelector(".quizEditSelect");
+    let editQuizName='';
+
+    let addItemForEdit=function(e='',selectBox='')
+    {
+        let editQuizName,editQuizId;
+
+        if(e){
+        editQuizName=e.target.value;
+        editQuizId='';
+        for (let optionQuiz of e.target.children)
+        {
+            if(optionQuiz.value===editQuizName)
+            {
+                editQuizId=optionQuiz.classList[0];
+            }
+        }
+        }
+        else
+        {
+            editQuizName=selectBox.value;
+            editQuizId='';
+            for (let optionQuiz of selectBox.children)
+            {
+                if(optionQuiz.value===editQuizName)
+                {
+                    editQuizId=optionQuiz.classList[0];
+                }
+            }
+        }
+
+        let editQuizQNA=document.querySelector(".editQuizForm .quizQNA");
+        if(editQuizName!='default'){
+        fetch(`/quizzes/quiz/data/${editQuizId}`)
+        .then(res=>res.json())
+        .then(data=>
+        {
+            let editQuizName=document.querySelector(".editQuizForm .quizName");
+            let editQuizDesc=document.querySelector(".editQuizForm .quizDesc");
+            let editQuizQNA=document.querySelector(".editQuizForm .quizQNA");
+            editQuizQNA.innerHTML='';
+            editQuizName.value=data[0].quizName;
+            editQuizDesc.value=data[0].quizDesc;
+
+            let content='';            
+            let quesOptions='';
+            let quesAnsSelect='';
+            let charCode=65;
+            for(let ques of data[0].quizQNA)
+            {
+                for(let o of ques.options)
+                {
+                    let text=`<input required type="text" placeholder="option ${String.fromCharCode(charCode)}" class="options" value="${o}">`;
+ 
+                    let ansSelect;
+ 
+                    if(o===ques.ans)
+                    {
+                        ansSelect=`<option value="${o}" selected>${String.fromCharCode(charCode)}</option>`;
+                    }
+                    else
+                    {
+                        ansSelect=`<option value="${o}">${String.fromCharCode(charCode)}</option>`;
+                    }
+
+                    quesOptions+=text;
+                    quesAnsSelect+=ansSelect;
+                    charCode++;
+                }
+
+                let content=`
+                        <div class="question">
+
+                        <input required type="text" placeholder="Write your question" class="ques" value='${ques.ques}'>
+
+                        <div class="options_group">`
+                            + 
+                                quesOptions
+                            +
+                            `
+
+
+                        </div>
+
+                        <div style="display: flex;" class="opt_ans">
+                        
+                            <p>Correct answer : </p>
+                        
+                            <select name="ans" class="ans" style="margin-left:10px" onchange="detectChange(this)">
+                                <option value="default" disabled>Select</option>
+                                `
+                                + quesAnsSelect +
+                                `                                
+
+                                </select>
+                        
+                            <span title="delete" onclick="deleteQues(event,this,'editSection')" 
+                            class="delQues"><i class="fa-solid fa-trash"></i></span>
+                    
+                        </div>
+                
+                    </div>`;
+        
+                editQuizQNA.insertAdjacentHTML("beforeend",content);
+
+                quesOptions='';
+                quesAnsSelect='';
+                charCode=65;
+            }            
+
+            document.querySelector(".editQuizForm .total").value=data[0].quizQNA.length;
+
+
+        }).catch((err)=>
+        {
+            console.log("Error",err);
+        })
+    }}
+
+    editSelectBox.addEventListener("change",addItemForEdit);
+    
+
+    function editQuizForm(e)
+    {
+
+        e.preventDefault();
+        let questions=document.querySelectorAll(".question");
+        let quesAns=[];
+        let oneQues=
+        {
+            ques:'',
+            options:[],
+            ans:''
+        }
+
+        for(let ques of questions)
+        {
+            for(let child of ques.children)
+            {
+                if(child.classList.contains("ques"))
+                    oneQues.ques=child.value;
+                else if(child.classList.contains("options_group"))
+                {
+                    for(let c of child.children)
+                    {
+                        oneQues.options.push(c.value);
+                    }
+                }
+                else if(child.classList.contains("opt_ans"))
+                {
+
+                    if(child.children[1])
+                    {
+                        oneQues.ans=child.children[1].value;
+                    }
+                }
+            }
+
+            quesAns.push({...oneQues});
+            oneQues.ques='';
+            oneQues.ans='';
+            oneQues.options=[];
+        }
+    
+        let quizAddData={
+            quizName:document.querySelector(".editQuizForm .quizName").value,
+            quizDesc:document.querySelector(".editQuizForm .quizDesc").value,
+            quizQNA:[...quesAns],
+            total:0
+        }
+
+        quizAddData.quizQNA.shift();
+        quizAddData.total=quizAddData.quizQNA.length;
+
+        fetch(`/quiz/data/${quizAddData.quizName}`, {
+        method: 'PATCH',
+        body: JSON.stringify(quizAddData),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+        })
+        .then((response) => response.json())
+        .then((json) => console.log(json));
+
+        window.location.reload();
+
+    }
+
+</script>
+
+
+
+<%- include("./partials/footer"); %>

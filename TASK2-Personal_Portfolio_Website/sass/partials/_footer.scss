@@ -1,0 +1,66 @@
+footer
+{
+
+    @include Flex(space-around,flex-start);
+    justify-content: space-between;
+    flex-wrap: wrap;
+    min-height: 40vh;
+    padding: 50px 0;
+    background-color: #0f0f0f;
+    position: relative;
+
+    &::before
+    {
+        content:'';
+        @include pos(absolute,-1,0,0,-100px,0);
+        @include Dimensions(140vw,"",100%,"");
+        background-color: #0f0f0f;
+        z-index: -1;
+    }
+
+    .footer_item
+    {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        margin: 20px;
+        font-size: .9rem;
+        img
+        {
+            width:180px;
+        }
+        p
+        {
+            margin-top: 10px;
+            color:#606060;
+        }
+        h3
+        {
+            color:white;
+        }
+        .links
+        {
+            margin-top: 10px;
+            @include Flex(space-around, flex-start);
+            flex-direction: column;
+            a
+            {
+                text-decoration: none;
+                color:#606060;
+                margin-bottom: 5px;
+            }
+        }
+
+
+
+    }
+
+    .cpy
+    {
+        position: absolute;
+        bottom:10px;
+        left:50%;
+        transform: translate(-50%,0);
+        color:white;
+    }
+}

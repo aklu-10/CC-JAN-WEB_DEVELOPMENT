@@ -1,0 +1,73 @@
+
+.skills
+{
+    min-height: 100vh;
+    width: 100%;
+    position: relative;    
+
+    .cover
+    {
+        @include pos(absolute,-1,0,none,0,none);
+        @include Dimensions(100%,"",100%,"");
+        object-fit: cover;
+        opacity: 0.2;
+    }
+
+    .skill_set
+    {
+        .skill_item
+        {
+            @include Flex(center,center);
+            
+            .skill_img
+            {
+                width: 10%;
+                margin: 10px;
+                text-align: center;
+                img
+                {
+                    width: 100%;
+                    object-fit: contain;
+                }
+
+            }
+            .xp
+            {
+                @include Flex(center,center);
+                width:75%;
+                position: relative;
+
+                .line
+                {
+                    @include Dimensions(100%,"",2px,"");
+                    background-color: $bg-primary;
+                    position: relative;
+
+                    &::before
+                    {
+                        content: '';
+                        @include pos(absolute,1,50%,none,0,none);
+                        @include Dimensions(10px,"",10px,"");
+                        background-color: $bg-primary;
+                        transform: translate(0,-50%);
+                        border-radius: 100%;
+                    }
+
+                    &.rev::before
+                    {
+                        left: 99%;
+                    }
+                }
+
+                button
+                {
+                    width:200px;
+                    margin-bottom: 32px;
+                }
+
+            }
+        }
+
+    }
+
+}

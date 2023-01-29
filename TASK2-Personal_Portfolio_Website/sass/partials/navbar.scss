@@ -1,0 +1,54 @@
+header
+{
+    @include Dimensions(100%,"min-",10vh,"");
+    @include Flex(space-between, center);
+    @include pos(fixed,15);
+    padding: 0 40px;
+    background-color: rgba($color: #fff, $alpha: .4);
+    backdrop-filter: blur(10px);
+
+    .logo
+    {
+        img
+        {
+            @include Dimensions(200px);
+        }
+    }
+
+    .menu_container
+    {
+        @include Dimensions(max-content);
+        @include Flex(flex-end,center);
+        animation: slideIn .1s linear 1;
+
+        .menu
+        {
+            a
+            {
+                font-weight:lighter;
+                margin-left:70px;
+                font-size: .92rem;
+                text-align: right;
+                color:$bg-primary;
+                @include Dimensions(60px);
+
+                &:hover
+                {
+                    color:$bg-primary;
+                    font-weight: 400;
+                }
+            }
+            @include Flex(space-between,center);
+        }
+    }
+
+    #hamMenu
+    {
+        display: none;
+        @include pos(absolute,20,15px,none,none,10px);
+        cursor: pointer;
+        color:$bg-primary;
+        font-size: 1.6rem;
+    }
+
+}

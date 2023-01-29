@@ -1,0 +1,38 @@
+.about
+{
+    position: relative;
+    .content
+    {
+        min-height: 80vh;
+        @include Flex(center,center);
+        flex-wrap: wrap;
+
+        .about_content
+        {
+            @include Flex(center,center);
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 100px;
+            position: relative;
+            text-align: center;
+
+            img
+            {
+                @include Dimensions(500px,"",500px,"");
+                object-fit: cover;
+            }
+
+        }
+    }
+
+    a
+    {
+        display: inline-block;
+        width: max-content;
+        margin-left: 50%;
+        transform: translate(-50%,0);
+        color:white;
+    }
+       
+}
+

@@ -1,0 +1,80 @@
+.hero
+{
+    @include Dimensions(100%,"",100vh,"min-");    
+    @include Flex(space-around,center);
+
+    overflow: hidden;
+
+    .content
+    {
+        width:30%;
+        h1
+        {
+            font-weight: 300;
+            padding-right:5px;  
+
+            span
+            {
+                font-weight: 300;
+                color:$bg-primary;
+                font-size: 3rem;
+                padding-right: 5px;
+                animation: typing 1s linear infinite;
+            }
+
+        }
+
+        a
+        {
+            display: inline-block;
+            box-shadow: 0 0 4px black;
+        }
+        
+
+    }
+
+    .content_image
+    {
+        @include Dimensions(50%,"min-",100vh,"");
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeIn 1s linear forwards;
+        animation-delay: 1s;
+        img
+        {
+            width:500px;
+            @include pos(absolute,1,none,-11%,none,50%);
+            transform: translate(50%,0);
+        }
+    }
+
+    .wave
+    {
+        width: 100%;
+        @include pos(absolute,-1,none,-17px,0,none);
+        animation: fadeIn 1s linear forwards;
+        animation-direction: alternate;
+
+        img
+        {
+            width: 100%;
+            transform:rotateY(180deg); 
+        }
+    }
+
+    .social_links
+    {
+        @include pos(absolute,1,none,1%,none,5px);
+        @include Flex(space-around,center);
+        
+        i
+        {
+            font-size: 1.2rem;
+            color:white;
+            margin: 0 10px;
+        }
+    }
+
+}

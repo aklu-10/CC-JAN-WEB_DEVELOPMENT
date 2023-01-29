@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+@import './partials/utilities.scss';
+@import './partials/navbar.scss';
+@import './partials/heroSection.scss';
+@import './partials/about.scss';
+@import './partials/projects.scss';
+@import './partials/skills.scss';
+@import './partials/contact.scss';
+@import './partials/footer.scss';
+@import './partials/responsive.scss';
+
+
+html
+{
+    scroll-behavior: smooth;
+}
+
+
+::-webkit-scrollbar
+{
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb
+{
+    background-color: $bg-primary;
+}
+
+a
+{
+    text-decoration: none;
+
+}
+
+
+*
+{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: Poppins,system-ui;
+}
+
+body
+{
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding: 0 5%;
+}

@@ -1,0 +1,228 @@
+
+@media (max-width:769px)
+{
+    header
+    {
+        .menu_container
+        {
+            display: none;
+            background-color: none;
+            overflow: hidden;
+            justify-content: flex-start;
+            @include pos(fixed,1,0,none,0,none);
+            @include Dimensions(100vw,"",100vh,"");
+            background-color: none;
+            .menu
+            {
+                flex-direction: column;
+                justify-content: space-around;
+                
+                @include Dimensions(60%,"",100vh,"min-");
+                position: relative;
+                left:-100%;
+                background-color: $bg-primary;
+                box-shadow: 0 0 10px black;
+
+                a
+                {
+                    width:100px;
+                    text-align: center;
+                    margin-left:0px;
+                    color:white;
+                }
+
+            }
+            
+        }
+ 
+        #hamMenu
+        {
+            display: block;  
+            padding: 10px;
+            padding-right: 20px;
+        }
+        
+    }
+
+    .hero
+    {
+        flex-direction: column-reverse;
+        justify-content: center;
+        .content
+        {
+            width: 100%;
+
+            h1
+            {
+                span
+                {
+                    font-size: 2rem;
+                }
+            }
+        }
+        .content_image
+        {
+            @include Dimensions(100%,"",50vh,"");
+            img
+            {
+                
+                width:350px;
+                top:1px;
+                object-fit: cover;
+            }
+
+        }
+    }
+
+    .about
+    {
+        .content
+        {
+            .about_content
+            {
+                margin-bottom: 0px;
+                @include Dimensions(100%,"",80vh,"");
+
+                img
+                {
+                    width: 80%;
+                    object-fit: contain;
+                }
+            }
+        }
+    }
+
+    .skill_set
+    {
+        .skill_item
+        {
+            
+            .skill_img
+            {
+                img
+                {
+                    width: 60px !important;
+                }
+            }
+
+            .xp
+            {
+                button
+                {
+                    font-size: .8rem;
+                }
+            }
+        }
+    }
+
+
+   .contact
+   {
+    .form_container
+    {
+
+        width: 100%;
+        padding: 0;
+        form
+        {
+            width: 100%;
+        }
+    }
+
+    .form_img
+    {
+        display: none;
+    }
+
+   }
+
+   footer
+   {
+        justify-content: center;
+
+       .footer_item,
+       .cpy
+       {
+           font-size: .8rem;
+       }
+
+   }
+
+}
+
+@media (max-width:465px)
+{
+    header
+    {
+        padding-left:6px ;
+        
+        #hamMenu
+        {
+            display: block;  
+            padding: 10px;
+            top:7px;
+            right:0;
+            font-size: 2rem;
+        }
+    }
+
+    .skills
+    {
+        .skill_set
+        {
+            .skill_item
+            {
+                .xp
+                {
+                    margin-left: 14px;
+                }
+            }
+
+            .skill_item.rev_sk
+            {
+            }
+
+            .xp
+            {
+                .line
+                {
+                    z-index: -1 !important;
+                }
+
+                button
+                {
+                    width:200px;
+                    margin-bottom: 32px;
+                }
+
+            }
+        }
+
+    }
+}
+
+
+@media (max-width:327px)
+{
+    .hero
+    {
+        .content_image
+        {
+            width:300px;
+        }
+        .social_links
+        {
+            bottom:-5px;
+        }
+    }
+
+    footer
+    {
+        .footer_item
+        {
+            width:100%;
+        }
+
+    }
+    
+}

@@ -1,0 +1,116 @@
+$bg-primary:#360087;
+
+@mixin Dimensions($w:initial,$minmaxW:"",$h:initial,$minmaxH:"")
+{
+    #{$minmaxW}width:$w;
+    #{$minmaxH}height:$h;
+}
+
+@mixin Flex($hAlign,$vAlign)
+{
+    display: flex;    
+    justify-content: $hAlign;
+    align-items: $vAlign;
+}
+
+@mixin pos($type,$zIndex,$t:0,$b:0,$l:0,$r:0)
+{
+    position: $type;
+    top: $t;
+    bottom: $b;
+    left: $l;
+    right: $r;
+    z-index: $zIndex;
+}
+
+
+
+.sp-y
+{
+    padding: 40px 0;
+}
+
+
+.btn
+{
+    margin-top: 30px;
+    padding:6px 30px;
+    background-color: $bg-primary;
+    color:white;
+    border:none;
+    border-radius: 50px;
+    font-size:1rem;
+    cursor: pointer;
+}
+
+.section_title
+{
+    @include Flex(center,center);
+    color: $bg-primary;
+}
+
+.view
+{
+    padding: 2px 40px;
+    margin-top: 10px;
+    border:1px solid white;
+    color:white;
+    background-color: transparent;
+    font-size: 1.8rem;
+    font-weight: 100;
+    cursor: pointer;
+}
+
+
+.toTop
+{
+    box-shadow: 0 0 2px black;
+    display: none;
+    position: fixed;
+    cursor: pointer;
+    padding: 10px;
+    bottom:10px;
+    right:10px;
+    font-size: 1.5rem;
+    z-index: 20;
+    background-color: $bg-primary;
+    color:white;
+    padding: 2px 10px;
+}
+ 
+
+@keyframes typing
+{
+    50%
+    {
+        border-right:3px solid white;
+    }    
+}
+
+@keyframes slideIn{
+    0%
+    {
+        display: flex;
+        transform: translateX(-100%) rotate(45deg);
+    }
+    100%
+    {
+        transform: translateX(0px) rotate(0);
+    }
+    
+}
+
+@keyframes fadeIn
+{
+    from
+    {
+        opacity: 0;
+        transform: translateY(50px);
+    }   
+    to
+    {
+        opacity: 1;
+        transform: translateY(0px);
+    } 
+}
+

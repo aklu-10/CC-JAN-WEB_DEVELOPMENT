@@ -1,0 +1,389 @@
+<%-include("partials/header");%>
+<%-include("partials/navbar");%>
+
+<header class="quizzesNav">
+
+    <nav>
+        <%  if(quizzes.length<8) { %>
+            <%    for(let i=0;i < quizzes.length;i++) { %>
+                    <a href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+    
+              <%  } } else { %>
+    
+                <%  for(let i=0;i<8;i++) { %>
+                    <a href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+    
+              <% }} %>
+
+    </nav>
+
+</header>
+
+<header class="quizzesNavMobile">
+
+    <nav class="mobile">
+
+        <div style="display:flex; justify-content: space-around; align-items: center;">
+            <a style="background:var(--bg-secondary); width:50%; color:white; text-align:center; padding:10px;" href="/quizzes">Quizzes</a>
+            <a style="background:var(--bg-secondary); width:50%; color:white; text-align:center; padding:10px;" href="/about">About</a>
+        </div>
+        <p>Top quizzes</p>
+        <%  if(quizzes.length<8) { %>
+        <%    for(let i=0;i < quizzes.length;i++) { %>
+                <a class="mobileLink" href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+
+          <%  } } else { %>
+
+            <%  for(let i=0;i < 8;i++) { %>
+                <a class="mobileLink" href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+
+          <% }} %>
+
+        
+    </nav>
+
+</header>
+
+<section class="quiz_">
+
+    <div class="quizzes_container" style="margin:10px 0; display:block;border:1px solid rgb(241, 239, 239); padding:10px;">
+
+        <h1 class="quizname" id="<%=quizId%>">Html Quiz</h1>
+
+        <div class="quizContent">
+
+            <div style="display:flex; justify-content:space-between; align-items:center;margin:10px 0;">
+                <p class="totalques">Total questions - 10</p>   
+                <p class="timer">0:00</p>
+            </div>
+
+            <div class="ques_and_options">
+                <p class="currques" style="margin:10px 0;font-size:1.2rem;"></p>
+                <div class="options">
+                </div>
+                <a class="btn square next" style="margin:20px 0; user-select: none;">Next</a>
+            </div>
+        </div>
+        <div class="result" >
+            
+        </div>
+
+        <div class="checkAnswers hide">
+
+        </div>
+
+    </div>
+
+    <div class="quiz_feature">
+
+        <%-include("partials/searchQuiz");%>
+
+
+        <div class="recentQuizzes">
+            <h4>Recent Quizzes</h4>
+            <%  for(let i=quizzes.length-1;i>=0;i--) { %>
+                <a href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+            <% } %>
+        </div>
+
+    </div>
+
+</section>
+
+    <script>
+
+        let quizData,globalquizData;
+        let currques=document.querySelector(".currques");
+        let quizname=document.querySelector(".quizname");
+        let totalques=document.querySelector(".totalques");
+        let options=document.querySelector(".options");
+        let next=document.querySelector(".next");
+        let result=document.querySelector(".result");
+        let quizContent=document.querySelector(".quizContent");
+        let timer=document.querySelector(".timer");
+        let answered=0;
+        let correctAnswers=0;
+        let correctAns;
+        let answers=[];
+        let curranswer;
+        let quesNo=0;
+
+        let minutes=0;
+        let seconds=0;
+        
+        let timeElap=setInterval(()=>
+        {
+            seconds++;
+            if(seconds<10)
+            {
+                timer.innerHTML=minutes+':0'+seconds;
+            }
+            else{
+
+                timer.innerHTML=minutes+':'+seconds;
+            }
+
+            if(seconds==59)
+            {
+                seconds=0;
+                minutes++;
+            }
+
+        },1000)
+
+        
+             fetch(`/quizzes/quiz/data/${quizname.id}`).then(res=>res.json()).then(data=>
+            {
+             quizData=data[0];
+             globalquizData=data[0];
+             let qname=quizData.quizName;
+             quizname.innerHTML=qname+" Quiz";
+             let questions=quizData.quizQNA;
+             let total=quizData.total;
+             totalques.innerHTML=`Total questions - ${total}`;
+             renderNewQuestion(questions,quesNo);
+            
+             next.addEventListener("click",function()
+             {
+                
+                 quesNo++;
+                 answers.push(curranswer);
+                 if(curranswer)
+                 {
+                     if(curranswer===correctAns)
+                     {
+                        correctAnswers++;
+                     }
+                     answered++;
+                 }
+                 curranswer='';
+
+                 if(quesNo>=questions.length)
+                 {
+                     quizContent.style.display="none";
+                     result.style.display="block";
+                     clearInterval(timeElap);
+                     let percentage=correctAnswers/total*100;
+
+                     let resultmsg="";
+                     if(percentage>=0 && percentage<=50)
+                     {
+                         resultmsg="You have to study hard."
+                     }
+                     else if(percentage>=50 && percentage<=60)
+                     {
+                         resultmsg="Not Bad, Not Good."
+                     }
+                     else if(percentage>=60 && percentage<=70)
+                     {
+                         resultmsg="Keep trying! you can do it."
+                     }
+                     else if(percentage>=70 && percentage<=80)
+                     {
+                         resultmsg="Well done! but you can do even better."
+                     }
+                     else
+                     {
+                         resultmsg="You have to be proud yourself."
+                     }
+                    
+                     let resultData=`<h3 style="margin:10px 0; margin-top:20px; font-weight:400;">Result</h3>
+                             <p class="answered">Anwered ${answered} out of ${total}</p>
+                             <p class="percentage">Percentage - ${percentage.toFixed()}%</p>
+                             <p class="resultMsg"> <em> ${resultmsg}</em></p>
+                             <p class="timeTaken">time taken - ${minutes+':'+(seconds<10?'0'+seconds:seconds)}</p>
+                             <button style="background:var(--bg-secondary); padding:5px 15px; color:white; border-radius:5px;" onclick="tryAgain()">Try again</button>
+                             <button style="background:var(--bg-secondary); padding:5px 15px; color:white; border-radius:5px;" onclick=checkAnswers()>Check answers</button>
+                             <button style="background:var(--bg-secondary); padding:5px 15px; color:white; border-radius:5px;" onclick="shareResult(event)">Share</button>
+
+                             `;
+                     result.innerHTML=resultData;
+
+                 }else{
+                     options.innerHTML='';
+                     renderNewQuestion(questions,quesNo);
+                 }
+
+             })
+
+         }).catch(err=>console.log(err));
+
+        function renderNewQuestion(questions,index)
+        {
+            currques.innerHTML=`Q.${quesNo+1} - `+questions[index].ques;
+            correctAns=(questions[index].ans);
+
+            if(correctAns.includes("&lt;"))
+            {
+                correctAns=correctAns.replace("&lt;","<");
+                correctAns=correctAns.replace("&gt;",">");
+            }
+
+            questions[index].options.map(option=>
+            {   
+                let content=`<label for="${option}" style="display:flex; position:relative;">
+                    <input type="radio" id="${option}" style="margin-right:5px; position:absolute; top:50%; transform:translateY(-50%); left:10px;" name='${quesNo}'><div class="option_item" style="padding:10px; padding-left:30px; background:rgba(0,0,0,.046); width:100%; color:var(--bg-secondary);margin:1px 0;">
+                    ${option}</div></label>`;
+                options.innerHTML+=content;
+
+                let inputs=document.querySelectorAll("input");
+
+                for(let i of inputs)
+                {
+                    i.addEventListener("change",function(e)
+                    {
+                        curranswer=e.target.id;
+                    })
+                }
+                    
+            })
+
+            document.querySelector(".checkAnswers").insertAdjacentHTML("beforeend",document.querySelector(".ques_and_options").innerHTML);
+
+        }
+
+
+        function tryAgain()
+        {
+            window.location.reload();
+        }
+
+        function shareResult(e)
+        {
+            if(navigator.share)
+            {
+                let canvas=document.createElement("canvas");
+                console.log(e.target.parentElement.children);
+                let width=(e.target.parentElement.clientWidth);
+                let height=(e.target.parentElement.clientHeight);
+
+                //Result
+                let answered=document.querySelector(".answered").innerText;
+                let percentage=document.querySelector(".percentage").innerText;
+                let resultMsg=document.querySelector(".resultMsg").innerText;
+                let timeTaken=document.querySelector(".timeTaken").innerText;
+
+                canvas.width=500;
+                canvas.height=400;
+                let ctx=canvas.getContext("2d");
+
+                ctx.font="30px Arial";
+                ctx.fillStyle="white";
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+
+                ctx.fillStyle="black";
+                ctx.fillText(`${quizname.innerText}`,canvas.width/2-80,120);
+                
+                let img=new Image();
+                img.src="/images/quizpool.png";
+                ctx.drawImage(img,0,0);
+                ctx.font="20px Arial";
+                ctx.fillText("Result",canvas.width/2-80,canvas.height/2);
+                ctx.fillText(`${answered}`,canvas.width/2-80,canvas.height/2+40);
+                ctx.fillText(`${percentage}`,canvas.width/2-80,canvas.height/2+80);
+                ctx.fillText(`${resultMsg}`,canvas.width/2-80,canvas.height/2+120);
+                ctx.fillText(`${timeTaken}`,canvas.width/2-80,canvas.height/2+160);
+
+
+                shareCanvasAsImage(canvas);
+
+
+            }else{
+                alert("Device not supported.");
+            }
+        }
+
+        async function shareCanvasAsImage(c)
+        {
+            const dataUrl=c.toDataURL();
+            const blob=await ( await fetch(dataUrl)).blob();
+            const image=[];
+            image.push(new File([blob],'Result.png',{type:blob.type}))
+            
+            if (navigator.canShare && navigator.canShare({ files: [...image] })) {
+                try {
+                await navigator.share({
+                    title:'QUIZPOOL',
+                    files: [...image],         
+                    title: 'Share Drawing'  
+                })
+                } catch (error) {
+                console.log('Sharing failed!', error)
+                }
+            } else {
+                console.log('This device does not support sharing files.')
+            }
+        }
+
+        function checkAnswers()
+        {
+            let allAns=answers;
+
+            let checkAns=document.querySelector(".checkAnswers");
+            let optionContainer=document.querySelectorAll(".checkAnswers .options");
+            let optionItems=document.querySelectorAll(".option_item");
+            let inputs=document.querySelectorAll(".checkAnswers input");
+
+            for(let child of checkAns.children)
+            {
+                if(child.classList.contains("btn"))
+                {
+                    child.remove();
+                }
+            }
+            checkAns.classList.remove("hide");
+
+            let correctAnswers=[];
+
+            for(let quest of globalquizData.quizQNA)
+            {
+                correctAnswers.push(quest.ans.trim());
+            }
+
+            for(let ans of answers)
+            {
+                for(let opt of optionItems)
+                {
+                    if(opt.innerText===ans)
+                    {
+                        opt.previousElementSibling.checked=true;
+                    }
+                    opt.style.pointerEvents="none";
+                }
+            }
+
+            for(let input of inputs)
+            {
+                input.disabled=true;
+            }
+
+            let index=0;
+            let currCorrectAns=correctAnswers[index];
+
+            for(let child of optionContainer)
+            {
+                for(let label of child.children)
+                {
+                    if(label.children[1].innerText===currCorrectAns)
+                    {
+                        label.children[1].style.background="green";
+                        label.children[1].style.color="white";
+                    }
+                }
+
+                index++;
+                currCorrectAns=correctAnswers[index];
+                
+            }
+
+
+
+           
+
+
+        }
+
+    </script>
+
+
+<%-include("partials/footer");%>

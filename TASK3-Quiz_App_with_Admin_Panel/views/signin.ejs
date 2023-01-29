@@ -1,0 +1,26 @@
+<%-include("./partials/header");%>    
+    
+    <section class="signin">
+        
+        <form action="/quizzes/admin/signin" method="Post">
+            
+            <h1 style="margin-bottom:10px">Admin</h1>
+            <% if(errors){ %>
+                <p style="color:red; text-align: center;"><%=errors%></p>
+            <% } %>
+            <div class="form_item">
+                <input type="email" placeholder="Enter your email" name="email" required>
+            </div>
+            
+            <div class="form_item">
+                <input type="password" placeholder="Enter your password" name="password" required>
+            </div>
+            
+            <button type="submit">Submit</button>
+
+
+        </form>
+
+    </section>
+
+<%-include("./partials/footer");%>    

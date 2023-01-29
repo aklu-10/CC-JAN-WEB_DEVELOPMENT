@@ -1,0 +1,136 @@
+.projects
+{
+    width: 100%;
+    min-height: 100vh;
+    background: $bg-primary;
+    padding: 10px 0;
+    position: relative;
+    &::before
+    {
+        overflow: hidden;
+        @include pos(absolute,-1,0,0,-100px,0);
+        width: 140vw;
+        z-index: -1;
+        content: '';
+        background: $bg-primary;
+    }
+
+    .section_title
+    {
+        min-height: 10vh;
+    }
+
+    .filter
+    {   
+        @include Dimensions(97%,"",10vh,"min-");
+        @include Flex(flex-start,center);
+        overflow: auto;
+        margin: 0 auto;
+
+        .filter_btn.active
+        {
+            background-color: white;
+            padding: 4px 30px;
+            font-size: 1rem;
+            color:$bg-primary;
+            border:1px solid white;
+
+
+            &:hover
+            {
+                background-color:white;
+                color: $bg-primary;
+
+            }
+        }
+
+        .filter_btn
+        {
+            border:1px solid white;
+            padding: 4px 30px;
+            font-size: 1rem;
+            color:white;
+            background-color: transparent;
+        
+            &:hover
+            {
+                background-color: rgba(255,255,255,0.4);
+                padding: 4px 30px;
+                font-size: 1rem;
+                color:white;
+            }
+
+        }
+
+    }
+
+    .projects_container
+    {
+        min-height: 80vh;
+        @include Flex(space-around,center);
+        flex-wrap: wrap;
+        .project_item
+        {
+            margin: 20px;
+            @include Dimensions(400px,"",350px,"");
+            position: relative;
+            overflow: hidden;
+            transition:.2s ease;
+            animation:fadeIn .4s linear 1;
+
+          
+            &:hover .project_hover_effect
+            {
+                display: flex;
+                transform: translateY(0);
+
+            }
+
+            &:hover img
+            {
+                transform: scale(.95);
+            }
+
+
+            img
+            {
+                width: 100%;
+                height: inherit;
+                object-fit: cover;
+                transition: .2s ease;
+            }
+
+            .project_hover_effect
+            {
+                @include Dimensions(100%,"",100%,"");
+                @include Flex(flex-end,flex-start);
+                position: absolute;
+                top:0;
+                overflow: hidden;
+                transform: translateY(100%);
+                flex-direction: column;
+                padding: 20px;
+                background-image:linear-gradient(3deg, #4100a2 38%, transparent );
+                color:white;
+                transition: .2s ease;
+
+                h2
+                {
+                    font-size: 1.5rem;
+                }
+
+                button
+                {
+                    &:hover
+                    {
+                        color:$bg-primary;
+                        background-color: white;
+
+                    }
+                }
+
+            }
+        }
+    }
+}
+

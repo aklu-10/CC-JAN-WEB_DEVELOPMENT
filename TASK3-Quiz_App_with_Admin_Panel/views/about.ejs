@@ -1,0 +1,61 @@
+<%-include('./partials/header');%>
+<%-include('./partials/navbar');%>
+
+
+<header class="quizzesNav">
+
+    <nav>
+        <%  for(let i=0;i<quizzes.length;i++) { %>
+            <a href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+        <% } %>
+    </nav>
+
+</header>
+
+<header class="quizzesNavMobile">
+
+    <nav class="mobile">
+
+        <div style="display:flex; justify-content: space-around; align-items: center;">
+            <a style="background:var(--bg-secondary); width:50%; color:white; text-align:center; padding:10px;" href="/quizzes">Quizzes</a>
+            <a style="background:var(--bg-secondary); width:50%; color:white; text-align:center; padding:10px;" href="/about">About</a>
+        </div>
+        <p>Top quizzes</p>
+        <%  if(quizzes.length<8) { %>
+        <%    for(let i=0;i < quizzes.length;i++) { %>
+                <a class="mobileLink" href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+
+          <%  } } else { %>
+
+            <%  for(let i=0;i < 8;i++) { %>
+                <a class="mobileLink" href="/quizzes/<%=quizzes[i]%>"><%=quizzes[i]%></a>
+
+          <% }} %>
+
+        
+    </nav>
+
+</header>
+
+<section class="about">
+
+    <div class="about_content">
+        <h1>
+            QUIZPOOL
+        </h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, vero rerum! Ab error nemo, numquam, beatae commodi dolorum consequatur adipisci id illum natus corrupti minima quia eaque nobis earum minus.</p>
+
+        <br>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem rem nobis provident esse molestias ullam! Earum aliquid, omnis nam laudantium cumque perferendis sequi necessitatibus perspiciatis, asperiores suscipit, quaerat recusandae illum.</p>
+    </div>
+
+    <div class="about_img">
+
+        <img src="/images/quizpool.png" alt="quizpool_image">
+
+    </div>
+
+</section>
+
+
+<%-include('./partials/footer');%>
