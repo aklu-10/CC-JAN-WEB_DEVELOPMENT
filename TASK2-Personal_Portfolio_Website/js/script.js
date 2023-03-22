@@ -2,7 +2,7 @@ import projects from "./projects.js";
 import skills from "./skills.js";
 
 let titleHolder=document.querySelector("#profession");
-let titles=["Akash Kumar.","a Student.","an Intern."];
+let titles=["Akash Kumar.","a Student.","exploring Web Dev."];
 let charIndex=0;
 let titleIndex=0;
 
